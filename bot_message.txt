@@ -1,0 +1,252 @@
+使用者與助理對話紀錄（依序；使用者重複傳送的訊息亦逐次列出）
+========================================================
+
+[使用者]
+在 @game bot/biltzbot.ipynb 中新增一個 code cell, 完成底下的程式。
+basex 以及 basey 是左上角寶石中心點的位置。畫面中共有8x8顆寶石。
+每顆寶石的間距指正在 gap 中。
+寫一個函式，接受一個 row(用r 代表), 一個 column (用c 代表) ，回傳 (r,c)所代表的寶石位置
+
+[助理]
+已在 `game bot/biltzbot.ipynb` 新增 `gem_position(r, c)` 程式碼 cell，回傳寶石中心座標 `(x, y)`：`x = basex + c * gap`、`y = basey + r * gap`。`git diff --check` 檢查通過。
+
+[使用者]
+沒有看到
+
+[助理]
+新增的程式碼 cell 已在 `game bot/biltzbot.ipynb` 最後一格。內容如下：
+```python
+def gem_position(r, c):
+    x = basex + c * gap
+    y = basey + r * gap
+    return (x, y)
+```
+如果你是在已開啟的 Notebook 裡查看，請重新載入檔案；修改已儲存到上述路徑。
+
+[使用者]
+在 @game bot/biltzbot.ipynb 中新增一個 code cell，完成底下的函式。
+函式的名稱為 get_gem_color，接受一個r以及c，還有畫面的截圖 im。
+使用 pyautogui 取得 (r,c) 位置寶石的顏色，並回傳。
+
+[助理]
+已新增：
+```python
+def get_gem_color(r, c, im):
+    x, y = gem_position(r, c)
+    return im.getpixel((x, y))
+```
+`im` 可使用 `pyg.screenshot()` 取得；函式依 `(r, c)` 找到寶石座標，並從截圖讀取該位置的顏色。
+
+[使用者]
+在 @game bot/biltzbot.ipynb 新增一個code cell，完成 can_move_left 函式。
+can_move_left 接受 r,c 以及 im 需求如下
+我正在寫一個 match 3 的 game bot.
+畫面中有8x8 顆寶石。
+每顆寶石有4個可以移動的方向。往上，下，左，以及右。
+請判斷 (r,c) 可否往左移動，若可以，回傳True，否則回傳False.
+im 是螢幕截圖，可以取得寶石的中心點的 color
+
+[使用者，重複訊息 1]
+在 @game bot/biltzbot.ipynb 新增一個code cell，完成 can_move_left 函式。
+can_move_left 接受 r,c 以及 im 需求如下
+我正在寫一個 match 3 的 game bot.
+畫面中有8x8 顆寶石。
+每顆寶石有4個可以移動的方向。往上，下，左，以及右。
+請判斷 (r,c) 可否往左移動，若可以，回傳True，否則回傳False.
+im 是螢幕截圖，可以取得寶石的中心點的 color
+
+[使用者，重複訊息 2（附帶 notebook 內容）]
+在 @game bot/biltzbot.ipynb 新增一個code cell，完成 can_move_left 函式。
+can_move_left 接受 r,c 以及 im 需求如下
+我正在寫一個 match 3 的 game bot.
+畫面中有8x8 顆寶石。
+每顆寶石有4個可以移動的方向。往上，下，左，以及右。
+請判斷 (r,c) 可否往左移動，若可以，回傳True，否則回傳False.
+im 是螢幕截圖，可以取得寶石的中心點的 color
+
+[助理]
+已新增 `can_move_left(r, c, im)`。函式模擬與左側寶石交換，並檢查交換後兩個位置是否形成橫向或縱向至少三顆同色；如果 `c == 0` 或沒有形成連線，就回傳 `False`。需先執行前面的 `gem_position` 和 `get_gem_color` 定義。
+
+[使用者]
+依 can_move_left 的規格，完成 can_move_right,can_move_up,and can_move_down
+
+[使用者]
+依 can_move_left 的規格，完成 can_move_right,can_move_up,and can_move_down
+
+[助理]
+已完成三個函式，共用 `_can_swap_and_match` 檢查交換後是否形成至少三顆同色寶石的連線：
+```python
+def can_move_right(r, c, im):
+    return _can_swap_and_match(r, c, r, c + 1, im)
+
+def can_move_up(r, c, im):
+    return _can_swap_and_match(r, c, r - 1, c, im)
+
+def can_move_down(r, c, im):
+    return _can_swap_and_match(r, c, r + 1, c, im)
+```
+超出 8×8 棋盤的移動會回傳 `False`。
+
+[使用者]
+在 @game bot/biltzbot.ipynb 中新增一個code cell，完成底下的工作。
+先存下目前的時間。
+螢幕截圖
+進入無窮迴圈。
+對於畫面中的每顆寶石，判斷是否 can_move_right,can_move_up,and can_move_down
+若其中一個可以，就將寶石(r,c)移到對應方向。
+再截圖
+若超過一分鐘，跳出無窮迴圈。
+
+[使用者，重複訊息 1]
+在 @game bot/biltzbot.ipynb 中新增一個code cell，完成底下的工作。
+先存下目前的時間。
+螢幕截圖
+進入無窮迴圈。
+對於畫面中的每顆寶石，判斷是否 can_move_right,can_move_up,and can_move_down
+若其中一個可以，就將寶石(r,c)移到對應方向。
+再截圖
+若超過一分鐘，跳出無窮迴圈。
+
+[使用者，重複訊息 2（附帶 notebook 內容）]
+在 @game bot/biltzbot.ipynb 中新增一個code cell，完成底下的工作。
+先存下目前的時間。
+螢幕截圖
+進入無窮迴圈。
+對於畫面中的每顆寶石，判斷是否 can_move_right,can_move_up,and can_move_down
+若其中一個可以，就將寶石(r,c)移到對應方向。
+再截圖
+若超過一分鐘，跳出無窮迴圈。
+
+[使用者，重複訊息 3]
+在 @game bot/biltzbot.ipynb 中新增一個code cell，完成底下的工作。
+先存下目前的時間。
+螢幕截圖
+進入無窮迴圈。
+對於畫面中的每顆寶石，判斷是否 can_move_right,can_move_up,and can_move_down
+若其中一個可以，就將寶石(r,c)移到對應方向。
+再截圖
+若超過一分鐘，跳出無窮迴圈。
+
+[使用者，重複訊息 4]
+在 @game bot/biltzbot.ipynb 中新增一個code cell，完成底下的工作。
+先存下目前的時間。
+螢幕截圖
+進入無窮迴圈。
+對於畫面中的每顆寶石，判斷是否 can_move_right,can_move_up,and can_move_down
+若其中一個可以，就將寶石(r,c)移到對應方向。
+再截圖
+若超過一分鐘，跳出無窮迴圈。
+
+[使用者，重複訊息 5]
+在 @game bot/biltzbot.ipynb 中新增一個code cell，完成底下的工作。
+先存下目前的時間。
+螢幕截圖
+進入無窮迴圈。
+對於畫面中的每顆寶石，判斷是否 can_move_right,can_move_up,and can_move_down
+若其中一個可以，就將寶石(r,c)移到對應方向。
+再截圖
+若超過一分鐘，跳出無窮迴圈。
+
+[使用者，重複訊息 6]
+在 @game bot/biltzbot.ipynb 中新增一個code cell，完成底下的工作。
+先存下目前的時間。
+螢幕截圖
+進入無窮迴圈。
+對於畫面中的每顆寶石，判斷是否 can_move_right,can_move_up,and can_move_down
+若其中一個可以，就將寶石(r,c)移到對應方向。
+再截圖
+若超過一分鐘，跳出無窮迴圈。
+
+[助理]
+已新增 code cell。它先記錄時間並截圖，再反覆掃描棋盤；每顆寶石依序嘗試右、上、下，成功時拖曳寶石並更新截圖，超過一分鐘就停止。
+```python
+import time
+
+start_time = time.time()
+im = pyg.screenshot()
+
+while time.time() - start_time < 60:
+    for r in range(8):
+        if time.time() - start_time >= 60:
+            break
+        for c in range(8):
+            if time.time() - start_time >= 60:
+                break
+            if can_move_right(r, c, im):
+                next_r, next_c = r, c + 1
+            elif can_move_up(r, c, im):
+                next_r, next_c = r - 1, c
+            elif can_move_down(r, c, im):
+                next_r, next_c = r + 1, c
+            else:
+                continue
+            x, y = gem_position(r, c)
+            next_x, next_y = gem_position(next_r, next_c)
+            pyg.moveTo(x, y)
+            pyg.dragTo(next_x, next_y, duration=0.2, button='left')
+            pyg.sleep(0.1)
+            im = pyg.screenshot()
+```
+
+[使用者]
+請把到目前為止，我與你溝通的所有訊息都存成一個bot_message.txt
+
+[使用者，重複訊息 1]
+請把到目前為止，我與你溝通的所有訊息都存成一個bot_message.txt
+
+[使用者，重複訊息 2]
+請把到目前為止，我與你溝通的所有訊息都存成一個bot_message.txt
+
+[使用者，重複訊息 3]
+請把到目前為止，我與你溝通的所有訊息都存成一個bot_message.txt
+
+[使用者，重複訊息 4]
+請把到目前為止，我與你溝通的所有訊息都存成一個bot_message.txt
+
+[使用者，重複訊息 5]
+請把到目前為止，我與你溝通的所有訊息都存成一個bot_message.txt
+
+[使用者，重複訊息 6]
+請把到目前為止，我與你溝通的所有訊息都存成一個bot_message.txt
+
+[使用者，重複訊息 7]
+請把到目前為止，我與你溝通的所有訊息都存成一個bot_message.txt
+
+[使用者]
+請把到目前為止，我與你溝通的所有訊息都存成一個bot_message.txt
+
+[使用者，重複訊息]
+請把到目前為止，我與你溝通的所有訊息都存成一個bot_message.txt
+
+[使用者]
+初始化 git，設定
+user.name "fii"
+user.email c115143154@nkust.edu.tw
+
+[使用者，重複訊息 1]
+初始化 git，設定
+user.name "fii"
+user.email c115143154@nkust.edu.tw
+
+[使用者，重複訊息 2]
+初始化 git，設定
+user.name "fii"
+user.email c115143154@nkust.edu.tw
+
+[使用者，重複訊息 3]
+初始化 git，設定
+user.name "fii"
+user.email c115143154@nkust.edu.tw
+
+[使用者，重複訊息 4]
+初始化 git，設定
+user.name "fii"
+user.email c115143154@nkust.edu.tw
+
+[使用者，重複訊息 5]
+初始化 git，設定
+user.name "fii"
+user.email c115143154@nkust.edu.tw
+
+[助理]
+我會把目前對話（含重複訊息）補進 `bot_message.txt`，並在此專案初始化 Git、設定指定的提交者名稱與 email。
